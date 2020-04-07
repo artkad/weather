@@ -1,0 +1,4 @@
+/node_modules
+.gitignore/
+.gitignore.swp/
+server/node_modules/
