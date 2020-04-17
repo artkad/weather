@@ -14,16 +14,16 @@ class SwapiService {
 }
 const swapi = new SwapiService();
 
-const findTemp = function(temp) {
-    let dateT = new Date();
-    let curentTime = dateT.toString().match(/(?<=\s)\w{2}(?=:)/g)
+const findTemp = function(temp, tz) {
+    let curentTime = Math.round(new Date().getTime()/1000.0) + tz;
+    const regexp = /\w{6}/g;
     let searchTime = '';
     let searchTemp = '';
+    const num = curentTime.toString().match(regexp)
     temp.forEach((el) => {
-        searchTime = el.dt_txt.match(/(?<=\s)\w{2}(?=:)/g)
-        if(curentTime[0] == searchTime[0]) {
+        searchTime = el.dt;
+        if(curentTime.toString().match(regexp)[0] == searchTime.toString().match(regexp)[0]) {
           searchTemp = +el.main.temp; 
-            console.log(searchTemp)
         } 
     });
     return searchTemp
@@ -32,12 +32,11 @@ const findTemp = function(temp) {
 swapi.getWeather()
   .then((data) => {
     console.log(data)
-  const {id, name} = data.city;
+  const {id, name, timezone} = data.city;
   const temp = data.list;
-     console.log(findTemp(temp))
   const html = `
   <div class='title-city'>${ name }</div>
-  <div class='temp-clock'>${ (findTemp(temp) - 32)/ 1.8 }</div>`;
+  <div class='temp-clock'>${ ~~(findTemp(temp, timezone) - 273.15) }</div>`;
   document.querySelector('.container').insertAdjacentHTML('beforeend', html);
   });
 
