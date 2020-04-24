@@ -22,6 +22,7 @@ const findTemp = function(temp, tz) {
     const num = curentTime.toString().match(regexp)
     temp.forEach((el) => {
         searchTime = el.dt;
+      console.log(curentTime.toString().match(regexp)[0] , searchTime.toString().match(regexp)[0])
         if(curentTime.toString().match(regexp)[0] == searchTime.toString().match(regexp)[0]) {
           searchTemp = +el.main.temp; 
         } 
@@ -33,10 +34,10 @@ swapi.getWeather()
   .then((data) => {
     console.log(data)
   const {id, name, timezone} = data.city;
-  const temp = data.list;
+  const temp = data.list[0].main.temp;
   const html = `
   <div class='title-city'>${ name }</div>
-  <div class='temp-clock'>${ ~~(findTemp(temp, timezone) - 273.15) }</div>`;
+  <div class='temp-clock'>${ ~~(temp - 273.15) }</div>`;
   document.querySelector('.container').insertAdjacentHTML('beforeend', html);
   });
 
